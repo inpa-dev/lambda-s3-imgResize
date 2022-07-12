@@ -10,7 +10,7 @@ exports.handler = async (event, context, callback) => {
    const s3obj = { Bucket, Key };
 
    const filename = Key.split('/')[Key.split('/').length - 1]; // 경로 없애고 뒤의 파일명만
-   const ext = Key.split('.')[Key.split('.').length - 1]; // 파일 확장자만
+   const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase(); // 파일 확장자만
 
    const requiredFormat = ext === 'jpg' ? 'jpeg' : ext; // sharp에서는 jpg 대신 jpeg 사용
    console.log('name', filename, 'ext', ext);
@@ -36,9 +36,9 @@ exports.handler = async (event, context, callback) => {
          .promise();
       console.log('put', resizedImage.length);
 
-      //* 기존 객체 삭제
-      await s3.deleteObject(s3obj).promise();
-      console.log('del origin img');
+      // //* 기존 객체 삭제
+      // await s3.deleteObject(s3obj).promise();
+      // console.log('del origin img');
 
       // Lambda 함수 내부에서 모든 작업을 수행한 후에는 그에 대한 결과(또는 오류)와 함께 callback 함수를 호출하고 이를 AWS가 HTTP 요청에 대한 응답으로 처리한다.
       return callback(null, `thumb/${filename}`);
